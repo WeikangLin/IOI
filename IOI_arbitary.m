@@ -9,9 +9,9 @@
 %%%%%%    the .margestats and .corr files.
 %%%%%% 2. Put the parameter names below 
 %%%%%%    e.g., H0 parameterization in LCDM model:
-%%%%%%    Params = {'omegabh2','omegam','H0','sigma8','ns','tau'};
+%%%%%%      Params = {'omegabh2','omegam','H0','sigma8','ns','tau'};
 %%%%%%    e.g., Theta parameterization in LCDM model:
-%%%%%%    Params = {'omegabh2','omegach2','theta','logA','ns','tau'}; 
+%%%%%%      Params = {'omegabh2','omegach2','theta','logA','ns','tau'}; 
 
 clear;
 Params = {'omegabh2','omegach2','theta','logA','ns'};
@@ -32,6 +32,24 @@ Message = sprintf([num2str(Num_exp) ' constraints, ' ...
     num2str(ParamDim) ' parameters.']);
 disp(Message)
 
+
+for i = 1:Num_exp
+    fileID = fopen([constraint_filedir margfiles(i).name]);
+    Marg_header = fgets(fileID);
+    All_params = textscan(fileID,'%s %*[^\n]');
+    if i==1
+        Common_Params = All_params{1};
+    end
+    Common_Params = intersect(Common_Params, All_params{1});
+end
+
+Num_com_param = length(Common_Params);
+txt = ['There are ' num2str(Num_com_param) ...
+    ' common parameters (including derived),'...
+    ' which are stored in variable Common_Params'];
+disp(txt)
+
+
 %%%%%% Extract mu and C from files
 C = zeros(ParamDim,ParamDim,Num_exp);
 mu = zeros(ParamDim,Num_exp);
@@ -42,30 +60,31 @@ delimiterIn = ' ';
 headerlinesIn = 1;
 
 for i = 1:Num_exp
+    fileID = fopen([constraint_filedir margfiles(i).name]);
+    Marg_header = fgets(fileID);
+    Marg_header = fgets(fileID);
+    Marg_header = fgets(fileID);
+    meat = textscan(fileID,'%s %f %f %*[^\n]');
     for k = 1:ParamDim
-        fileID = fopen([constraint_filedir margfiles(i).name]);
-        Marg_header = textscan(fileID,'%s',13);
         index(k) = 1;
+        str=meat{1};
         NotFound = true;
-        for j = 1:400
-            meat = textscan(fileID,'%s %f %f %*[^\n]',1);
-            str =meat{1};
-            if (strcmp(str,Params{k}) == 1|strcmp(str,[Params{k},'*']) == 1)
+        for ii=1:length(meat{1})
+            if (strcmp(str{ii},Params{k}) == 1|strcmp(str{ii},[Params{k},'*']) == 1)
+                index(k) = ii;
                 NotFound = false;
-                break
             end
-            index(k) = index(k)+1;
         end
-        if NotFound
+        if NotFound == true
             error = sprintf(['Error: \n' ...
                 Params{k} ' is not in experiment: ' exp_names{i}]);
             disp(error)
             return
         end
-        mu(k,i) = meat{2};    
-        sigma(k,i) = meat{3};  
-        fclose(fileID);
+        mu(k,i) = meat{2}(index(k));    
+        sigma(k,i) = meat{3}(index(k));   
     end
+    fclose(fileID);
     
     Corr = importdata([constraint_filedir exp_names{i} '.corr']);
     offset = 0;
@@ -106,7 +125,7 @@ for i=1:Num_exp
     fprintf(fileID,'%18.2f',round(IOI(i,:),2));
 end
 
-FishingMessage = sprintf(['Finish: \n' ...
+FishingMessage = sprintf(['Finished: \n' ...
     'Two-experiment IOIs have been saved in ' Outfile '.']);
 disp(FishingMessage)
  
