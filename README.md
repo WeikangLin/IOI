@@ -6,6 +6,5 @@ Steps:
 1. Put all the .margestats and .corr files of the constraints of interest in one folder.
 2. Specify the constraint files directory that contains all the .margestats and .corr files.
 3. Put the parameter names like below  
-   e.g., H0 parameterization in LCDM model: Params = {'omegabh2','omegam','H0','sigma8','ns','tau'}   
-   
-   e.g., Theta parameterization in LCDM model: Params = {'omegabh2','omegach2','theta','logA','ns','tau'}   
+    e.g., H0 parameterization in LCDM model: Params = {'omegabh2','omegam','H0','sigma8','ns','tau'}   
+    e.g., Theta parameterization in LCDM model: Params = {'omegabh2','omegach2','theta','logA','ns','tau'}   
