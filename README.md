@@ -1,6 +1,7 @@
 # IOI_CosmoMC
 
 A matlab script for CosmoMC (after running getdist) to calculate two-experiment IOIs for arbitary number of contraints and in an arbitary parameter space outputs in e.g., IOI_CMB.txt  
+
 Steps:
   1. Put all the .margestats and .corr files of the constraints of interest in one folder.
   2. Specify the constraint files directory that contains all the .margestats and .corr files.
