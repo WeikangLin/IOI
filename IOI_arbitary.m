@@ -15,12 +15,18 @@
 
 clear;
 Params = {'omegabh2','omegach2','theta','logA','ns'};
-constraint_filedir = './batch/';
+constraint_filedir = './batch1/';
 
 Outfile = 'IOIs.txt';
 
 margfiles = dir(fullfile(constraint_filedir, '*.margestats'));
 Num_exp = length(margfiles);
+if Num_exp<2
+    ErrorMessage = sprintf(['Error: \n' ...
+                'Atleast two constraints are required.\n']);
+    disp(ErrorMessage);
+    return        
+end
 ParamDim = length(Params);
 
 exp_names = string(Num_exp);
@@ -33,6 +39,8 @@ Message = sprintf([num2str(Num_exp) ' constraints, ' ...
 disp(Message)
 
 
+
+%%%%%% Find the common parameters
 for i = 1:Num_exp
     fileID = fopen([constraint_filedir margfiles(i).name]);
     Marg_header = fgets(fileID);
@@ -48,6 +56,7 @@ txt = ['There are ' num2str(Num_com_param) ...
     ' common parameters (including derived),'...
     ' which are stored in variable Common_Params'];
 disp(txt)
+
 
 
 %%%%%% Extract mu and C from files
@@ -76,9 +85,9 @@ for i = 1:Num_exp
             end
         end
         if NotFound == true
-            error = sprintf(['Error: \n' ...
+            ErrorMessage = sprintf(['Error: \n' ...
                 Params{k} ' is not in experiment: ' exp_names{i}]);
-            disp(error)
+            disp(ErrorMessage)
             return
         end
         mu(k,i) = meat{2}(index(k));    
@@ -126,7 +135,7 @@ for i=1:Num_exp
 end
 
 FishingMessage = sprintf(['Finished: \n' ...
-    'Two-experiment IOIs have been saved in ' Outfile '.']);
+    'Two-experiment IOIs have been saved in ' Outfile '.\n']);
 disp(FishingMessage)
  
 fclose(fileID);
