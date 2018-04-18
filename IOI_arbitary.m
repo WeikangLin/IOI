@@ -15,7 +15,7 @@
 
 clear;
 Params = {'omegabh2','omegach2','theta','logA','ns'};
-constraint_filedir = './batch1/';
+constraint_filedir = './batch/';
 
 Outfile = 'IOIs.txt';
 
