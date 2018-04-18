@@ -23,7 +23,7 @@ margfiles = dir(fullfile(constraint_filedir, '*.margestats'));
 Num_exp = length(margfiles);
 if Num_exp<2
     ErrorMessage = sprintf(['Error: \n' ...
-                'Atleast two constraints are required.\n']);
+                'At least two constraints are required.\n']);
     disp(ErrorMessage);
     return        
 end
