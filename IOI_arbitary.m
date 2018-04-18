@@ -44,11 +44,14 @@ disp(Message)
 for i = 1:Num_exp
     fileID = fopen([constraint_filedir margfiles(i).name]);
     Marg_header = fgets(fileID);
+    Marg_header = fgets(fileID);
+    Marg_header = fgets(fileID);
     All_params = textscan(fileID,'%s %*[^\n]');
     if i==1
         Common_Params = All_params{1};
     end
-    Common_Params = intersect(Common_Params, All_params{1});
+    common_index = ismember(Common_Params, All_params{1});
+    Common_Params = Common_Params(common_index);
 end
 
 Num_com_param = length(Common_Params);
