@@ -5,17 +5,17 @@
 %%%%%% Steps:
 %%%%%% 0. Put all the .margestats and .corr files of the constraints of
 %%%%%%    interest in one folder.
-%%%%%% 1. Specify the constraint files directory that contains all 
-%%%%%%    the .margestats and .corr files.
-%%%%%% 2. Put the parameter names below 
+%%%%%% 1. Put the parameter names below 
 %%%%%%    e.g., H0 parameterization in LCDM model:
 %%%%%%      Params = {'omegabh2','omegam','H0','sigma8','ns','tau'};
 %%%%%%    e.g., Theta parameterization in LCDM model:
-%%%%%%      Params = {'omegabh2','omegach2','theta','logA','ns','tau'}; 
+%%%%%%      Params = {'omegabh2','omegach2','theta','logA','ns','tau'};
+%%%%%% 2. Run and select the directory that contains all 
+%%%%%%    the .margestats and .corr files.
 
 clear;
 Params = {'omegabh2','omegach2','theta','logA','ns'};
-constraint_filedir = './batch/';
+constraint_filedir = [uigetdir '/'];
 
 Outfile = 'IOIs.txt';
 
