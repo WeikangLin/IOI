@@ -1,4 +1,4 @@
-# IOI_CosmoMC
+#### IOI_CosmoMC
 
 A matlab script for CosmoMC (after running getdist) to calculate two-experiment IOIs for arbitary number of contraints and in an arbitary parameter space outputs in e.g., IOI_CMB.txt  
 
