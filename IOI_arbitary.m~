@@ -17,7 +17,8 @@ clear;
 Params = {'omegabh2','omegach2','theta','logA','ns'};
 constraint_filedir = './batch/';
 
-Outfile = 'IOIouts/IOI.txt';
+Outfile_two = 'IOI_two.txt';
+Outfile_mul = 'IOI_mul.txt';
 
 margfiles = dir(fullfile(constraint_filedir, '*.margestats'));
 Num_exp = length(margfiles);
@@ -129,7 +130,7 @@ end
 
 
 %%%%%% Saving the results of the two-data IOIs in a matrix for
-fileID = fopen(Outfile,'w');
+fileID = fopen(Outfile_two,'w');
 fprintf(fileID,'%18s',' ');
 fprintf(fileID,'%18s',exp_names{:});
 for i=1:Num_exp
@@ -137,45 +138,20 @@ for i=1:Num_exp
     fprintf(fileID,'%18s',exp_names{i});
     fprintf(fileID,'%18.2f',round(IOI(i,:),2));
 end
-fprintf(fileID,'\n\n\n\n\n\n');
 
+FishingMessage = sprintf(['Finished: \n' ...
+    'Two-experiment IOIs have been saved in ' Outfile_two '.\n']);
+disp(FishingMessage)
+ 
+fclose(fileID);
 
 
 %%%%%% calculating the multi-experiment IOIs 
-
-F_mul = zeros(ParamDim,ParamDim);
-mu_mul_pre = zeros(ParamDim,1);
-IOI_mul_pre = 0;
+%%%%%% and those by successively taking out one expriment 
+G_mul = zeros(ParamDim,ParamDim);
+mu_mul = zeros(ParamDim);
 for i = 1: Num_exp
-    F_mul = F_mul + C(:,:,i)^-1;
-    mu_mul_pre = mu_mul_pre + C(:,:,i)^-1*mu(:,i);
-    IOI_mul_pre = IOI_mul_pre + mu(:,i)'*C(:,:,i)^-1*mu(:,i);
+    G_mul = G_mul + C(:,:,i)^-1;
+    mu_mul = mu_mul + C(:,:,i)^-1*mu(:,i);
 end
-C_mul = F_mul^-1;
-mu_mul = C_mul*mu_mul_pre;
-IOI_mul = (IOI_mul_pre - mu_mul'*F_mul*mu_mul)/Num_exp;
-
-fprintf(fileID,'%30s', 'Mulit-IOI');
-fprintf(fileID,'%18.2f\n\n',round(IOI_mul,2));
-
-
-%%%%%% calculate the multi-IOIs by successively taking out each expriment 
-IOI_rmj = zeros(Num_exp,1);
-if Num_exp > 2
-    for j = 1: Num_exp
-        F_rmj = F_mul - C(:,:,j)^-1;
-        C_rmj = F_rmj^-1;
-        mu_rmj = C_rmj*(mu_mul_pre - C(:,:,j)^-1*mu(:,j));
-        IOI_rmj_pre = IOI_mul_pre - mu(:,j)'*C(:,:,j)^-1*mu(:,j);
-        IOI_rmj(j) = (IOI_rmj_pre - mu_rmj'*F_rmj*mu_rmj)/(Num_exp-1);
-        fprintf(fileID,'Removing %30s', exp_names{j});
-        fprintf(fileID,'%18.2f\n',round(IOI_rmj(j),2));
-    end
-end
-
-
-%%%%%% Finishing message:
-FishingMessage = sprintf(['Finished: \n' ...
-    'Two-experiment and multi-experiment IOIs have been saved in ' Outfile '.\n']);
-disp(FishingMessage)
-fclose(fileID);
+mu_mul = G_m
