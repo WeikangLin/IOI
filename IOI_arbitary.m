@@ -48,10 +48,15 @@ for i = 1:Num_exp
     Marg_header = fgets(fileID);
     Marg_header = fgets(fileID);
     All_params = textscan(fileID,'%s %*[^\n]');
-    if i==1
-        Common_Params = All_params{1};
+    All_params_without_star = All_params{1};
+    for index_temp = 1:length(All_params_without_star)
+         All_params_without_star(index_temp)= ... 
+             erase(All_params_without_star(index_temp),"*");
     end
-    common_index = ismember(Common_Params, All_params{1});
+    if i==1
+        Common_Params = All_params_without_star;
+    end
+    common_index = ismember(Common_Params, All_params_without_star);
     Common_Params = Common_Params(common_index);
 end
 
@@ -102,7 +107,7 @@ for i = 1:Num_exp
     Corr = importdata([constraint_filedir exp_names{i} '.corr']);
     offset = 0;
     for ii=1:length(Corr)
-        if Corr(ii-offset,1)==0.0
+        if Corr(ii-offset,ii-offset)==0.0
            Corr(ii-offset,:) = [];
            Corr(:,ii-offset)  = [];
            offset = offset+1;
@@ -155,21 +160,28 @@ C_mul = F_mul^-1;
 mu_mul = C_mul*mu_mul_pre;
 IOI_mul = (IOI_mul_pre - mu_mul'*F_mul*mu_mul)/Num_exp;
 
-fprintf(fileID,'%30s', 'Mulit-IOI');
-fprintf(fileID,'%18.2f\n\n',round(IOI_mul,2));
+fprintf(fileID,'%25s', 'Multi-IOI');
+fprintf(fileID,'%18.2f\n\n\n',round(IOI_mul,2));
 
 
 %%%%%% calculate the multi-IOIs by successively taking out each expriment 
 IOI_rmj = zeros(Num_exp,1);
+Outlierness = zeros(Num_exp,1);
+fprintf(fileID,'%25s%18s%18s\n', 'Removing','Remaining IOI','Outlierness');
 if Num_exp > 2
     for j = 1: Num_exp
         F_rmj = F_mul - C(:,:,j)^-1;
         C_rmj = F_rmj^-1;
         mu_rmj = C_rmj*(mu_mul_pre - C(:,:,j)^-1*mu(:,j));
         IOI_rmj_pre = IOI_mul_pre - mu(:,j)'*C(:,:,j)^-1*mu(:,j);
-        IOI_rmj(j) = (IOI_rmj_pre - mu_rmj'*F_rmj*mu_rmj)/(Num_exp-1);
-        fprintf(fileID,'Removing %30s', exp_names{j});
-        fprintf(fileID,'%18.2f\n',round(IOI_rmj(j),2));
+        IOI_rmj(j) = (IOI_rmj_pre - mu_rmj'*F_rmj*mu_rmj)/(Num_exp-1); 
+        Outlierness(j) = IOI_mul-(Num_exp-1)*IOI_rmj(j)/Num_exp;
+    end
+    [IOI_rmj_sort, sort_index] = sort(IOI_rmj);
+    for j = 1: Num_exp
+        fprintf(fileID,'%25s', exp_names{sort_index(j)});
+        fprintf(fileID,'%18.2f',round(IOI_rmj_sort(j),2));
+        fprintf(fileID,'%18.2f\n',round(Outlierness(sort_index(j)),2));
     end
 end
 
