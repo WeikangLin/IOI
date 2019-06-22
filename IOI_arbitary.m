@@ -175,7 +175,7 @@ if Num_exp > 2
         mu_rmj = C_rmj*(mu_mul_pre - C(:,:,j)^-1*mu(:,j));
         IOI_rmj_pre = IOI_mul_pre - mu(:,j)'*C(:,:,j)^-1*mu(:,j);
         IOI_rmj(j) = (IOI_rmj_pre - mu_rmj'*F_rmj*mu_rmj)/(Num_exp-1); 
-        Outlierness(j) = (Num_exp*IOI_mul/(Num_exp-1)-IOI_rmj(j))/2;
+        Outlierness(j) = (Num_exp*IOI_mul-(Num_exp-1)*IOI_rmj(j))/2;
     end
     [IOI_rmj_sort, sort_index] = sort(IOI_rmj);
     for j = 1: Num_exp
