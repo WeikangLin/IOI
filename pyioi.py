@@ -1,5 +1,5 @@
 # Python 3.7
-# 
+# "python pyioi.py -h" for help
 
 import numpy as np
 import pandas as pd
@@ -146,9 +146,9 @@ class IOI:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('-r', help='put input folder path here')
-    parser.add_argument('-o', help='output file path here')
-    parser.add_argument('-p', nargs='+', help='put all parameters you want here')
+    parser.add_argument('-r', metavar='input', help='put input folder path here', required=True)
+    parser.add_argument('-o', metavar='output', help='output file path here')
+    parser.add_argument('-p', metavar='param', nargs='+', help='put all parameters you want here', required=True)
 
     args = parser.parse_args()
     fn = args.r
