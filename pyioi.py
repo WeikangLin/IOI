@@ -1,5 +1,5 @@
 # Python 3.7
-# 
+# "python pyioi.py -h" for help
 
 import numpy as np
 import pandas as pd
@@ -7,7 +7,6 @@ import os
 import argparse
 
 class IOI:
-    _OutputFolder = 'Output'
 
     def readFile(self, fname):
         # Read File Data
@@ -39,6 +38,8 @@ class IOI:
         elif str(fname).endswith('.corr'):
             # .corr File
             df = pd.read_csv(fname, delim_whitespace=True, header=None)
+            # Drop zeros row
+            df = df[(df.T != 0).any()]
             return df
 
         else:
@@ -145,9 +146,9 @@ class IOI:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('-r', help='put input folder path here')
-    parser.add_argument('-o', help='output file path here')
-    parser.add_argument('-p', nargs='+', help='put all parameters you want here')
+    parser.add_argument('-r', metavar='input', help='put input folder path here', required=True)
+    parser.add_argument('-o', metavar='output', help='output file path here')
+    parser.add_argument('-p', metavar='param', nargs='+', help='put all parameters you want here', required=True)
 
     args = parser.parse_args()
     fn = args.r
@@ -173,7 +174,12 @@ if __name__ == "__main__":
     print('\n', ioi.calcRemainingIOI(dat, params))
 
     if out:
+        if not os.path.exists(os.path.dirname(out)):
+            os.makedirs(os.path.dirname(out))
+
         with open(out, 'w') as fp:
+            fp.write('%d parameters in total, %d common parameters, %d selected.' % (len(unique_params), len(common_params), len(params)))
+            fp.write('\n\n')
             fp.write(ioi.calcTwoIOI(dat, params).to_string())
             fp.write('\n')
             fp.write('\nMulti-IOI\t' + str(ioi.calcMultiIOI(dat, params)))
