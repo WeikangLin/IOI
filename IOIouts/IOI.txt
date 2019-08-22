@@ -13,8 +13,8 @@ CMBlens_lTEB_SN_BBN              0.00              0.31              1.19       
 
 
                  Removing     Remaining IOI       Outlierness
-              hiTT_lowTEB              1.49              0.62
-              hiEE_lowTEB              1.65              0.54
-      CMBlens_lTEB_SN_BBN              1.87              0.43
-                SZ_SN_BBN              2.50              0.11
-              hiTE_lowTEB              2.52              0.11
+              hiTT_lowTEB              1.49              2.49
+              hiEE_lowTEB              1.65              2.16
+      CMBlens_lTEB_SN_BBN              1.87              1.72
+                SZ_SN_BBN              2.50              0.46
+              hiTE_lowTEB              2.52              0.43
