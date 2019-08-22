@@ -136,7 +136,7 @@ class IOI:
             outlier = 0.5 * (n_exp * mioi - (n_exp-1) * remain)
             remainIOI[exp] = [remain, outlier]
         
-        df = pd.DataFrame.from_dict(remainIOI, orient="index", columns=["Remain", 'Outlier index'])
+        df = pd.DataFrame.from_dict(remainIOI, orient="index", columns=["Remain", 'Outlier'])
         if sort:
             df = df.sort_values(["Outlier"], ascending=False)
         return df
