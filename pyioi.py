@@ -48,7 +48,11 @@ class IOI:
             raise FileNotFoundError
 
     def extractParams(self, magstat, corr, parameters):
-        ind = [np.where(magstat['parameter'] == para)[0][0] for para in parameters]
+        try:
+            ind = [np.where(magstat['parameter'] == para)[0][0] for para in parameters]
+        except IndexError:
+            print('\n[Error]Please input correct parameter!')
+            exit()
         mean, sddev = magstat.iloc[ind][['mean', 'sddev']].values.T
         cgm = np.outer(sddev, sddev)
         cov = corr.values[np.ix_(ind, ind)] * cgm
