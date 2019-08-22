@@ -11,7 +11,7 @@ Steps:
     
 Usage for **pyioi**:
 
-python pyioi.py -r *Folder* -p *Paramter1* *Parameter2* *...*
+python pyioi.py -r *Folder* -o *Output* -p *Paramter1* *Parameter2* *...*
 
 
 For questions, contact wlin23@ncsu.edu
