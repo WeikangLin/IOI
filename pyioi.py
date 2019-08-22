@@ -38,8 +38,9 @@ class IOI:
         elif str(fname).endswith('.corr'):
             # .corr File
             df = pd.read_csv(fname, delim_whitespace=True, header=None)
-            # Drop zeros row
+            # Drop zeros row/column
             df = df[(df.T != 0).any()]
+            df = df.loc[:, (df != 0).any(axis=0)]
             return df
 
         else:
@@ -47,7 +48,11 @@ class IOI:
             raise FileNotFoundError
 
     def extractParams(self, magstat, corr, parameters):
-        ind = [np.where(magstat['parameter'] == para)[0][0] for para in parameters]
+        try:
+            ind = [np.where(magstat['parameter'] == para)[0][0] for para in parameters]
+        except IndexError:
+            print('\n[Error]Please input correct parameter!')
+            exit()
         mean, sddev = magstat.iloc[ind][['mean', 'sddev']].values.T
         cgm = np.outer(sddev, sddev)
         cov = corr.values[np.ix_(ind, ind)] * cgm
