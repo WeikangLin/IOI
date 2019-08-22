@@ -9,7 +9,9 @@ Steps:
     e.g., H0 parameterization in LCDM model: Params = {'omegabh2','omegam','H0','sigma8','ns','tau'}   
     e.g., Theta parameterization in LCDM model: Params = {'omegabh2','omegach2','theta','logA','ns','tau'}   
     
-Usage for `pyioi`:
-python pyioi.py -r <Folder> -p <Paramter1> <Parameter2> ...
+Usage for **pyioi**:
+
+python pyioi.py -r *Folder* -p *Paramter1* *Parameter2* *...*
+
 
 For questions, contact wlin23@ncsu.edu
