@@ -38,8 +38,9 @@ class IOI:
         elif str(fname).endswith('.corr'):
             # .corr File
             df = pd.read_csv(fname, delim_whitespace=True, header=None)
-            # Drop zeros row
+            # Drop zeros row/column
             df = df[(df.T != 0).any()]
+            df = df.loc[:, (df != 0).any(axis=0)]
             return df
 
         else:
