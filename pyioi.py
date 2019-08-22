@@ -84,7 +84,7 @@ class IOI:
                     print('%s not match.' % epm)
                     continue
                 experiments.append(epm)
-        print('%d files found, %d experiments matched.' % (len(fl), len(experiments)))
+        print('%d files found, %d experiments matched.' % (len(fl)-1, len(experiments)))
         assert(len(experiments) > 1)
 
         dat = {}
@@ -92,11 +92,6 @@ class IOI:
             marg = self.readFile(os.path.join(foldername, exp + '.margestats'))
             corr = self.readFile(os.path.join(foldername, exp + '.corr'))
             dat[exp] = (marg, corr)
-        # Common parameter Check
-        params = [set(x['parameter']) for x, _ in dat.values()]
-        unique_params = set.union(*params)
-        common_params = set.intersection(*params)
-        print('%d parameters in total, %d common parameters.' % (len(unique_params), len(common_params)))
         
         return dat
     
@@ -151,10 +146,12 @@ class IOI:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-r', help='put input folder path here')
+    parser.add_argument('-o', help='output file path here')
     parser.add_argument('-p', nargs='+', help='put all parameters you want here')
 
     args = parser.parse_args()
     fn = args.r
+    out = args.o
     params = args.p
 
     if not fn or not params:
@@ -163,8 +160,23 @@ if __name__ == "__main__":
 
     ioi = IOI()
     dat = ioi.folderRead(fn)
+    # Common parameter Check
+    param_ = [set(x['parameter']) for x, _ in dat.values()]
+    unique_params = set.union(*param_)
+    common_params = set.intersection(*param_)
+    print('%d parameters in total, %d common parameters, %d selected.' % (len(unique_params), len(common_params), len(params)))
+    
+
     print(ioi.calcTwoIOI(dat, params))
     print()
     print('\nMulti-IOI\t', ioi.calcMultiIOI(dat, params))
     print('\n', ioi.calcRemainingIOI(dat, params))
 
+    if out:
+        with open(out, 'w') as fp:
+            fp.write(ioi.calcTwoIOI(dat, params).to_string())
+            fp.write('\n')
+            fp.write('\nMulti-IOI\t' + str(ioi.calcMultiIOI(dat, params)))
+            fp.write('\n\n' + ioi.calcRemainingIOI(dat, params).to_string())
+
+    
