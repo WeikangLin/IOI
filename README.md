@@ -1,4 +1,4 @@
-#### IOI_CosmoMC
+#### IOI Matlab/Python codes. These codes are to calculate the two-dataset and multi-dataset IOIs as well as the outlier indices for a given set of constraints. Those constraints are summary statisitics given by the parameter means, uncertainties and correlation coefficients which can be obtained by, e.g., running CosmoMC and GetDist.
 
 #### For the Matlab Script:
 A matlab script for CosmoMC (after running getdist) to calculate two-dataset and multi-dataset IOIs, as well as all "outlier index" for an arbitary number of contraints and in an arbitary parameter space. Outputs are stored in e.g., IOI_CMB.txt  
