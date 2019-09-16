@@ -13,7 +13,7 @@ Steps:
  
 #### For the python script, usage of **pyioi**:
 
-replace the 2nd and 3rd steps above by the following
+replace the 2nd and the 3rd steps above by:
 python pyioi.py -r *Folder* -o *Output* -p *Paramter1* *Parameter2* *...*
 
 e.g.: `python pyioi.py -r ./batch -o ./IOIouts/IOI.txt -p omegabh2 omegach2 theta logA ns`
