@@ -25,4 +25,4 @@ Enter the obtained two-dataset IOI value and the number of parameters
 
 
 #### 
-#### For questions, contact wlin23@ncsu.edu
+#### For questions, contact weikanglin@sjtu.edu.cn
