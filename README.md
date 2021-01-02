@@ -19,6 +19,10 @@ python pyioi.py -r *Path/to/GetDist/outputs* -o *Output/directory* -p *Paramter1
 e.g.: `python pyioi.py -r ./batch -o ./IOIouts/IOI.txt -p omegabh2 omegach2 theta logA ns`
 
 
+#### For the Bayesian interpretation framework of the two-dataset IOI:
+Enter the obtained two-dataset IOI value and the number of parameters
+
+
 
 #### 
 #### For questions, contact wlin23@ncsu.edu
