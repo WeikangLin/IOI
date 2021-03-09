@@ -1,4 +1,4 @@
-#### IOI Matlab/Python codes. These codes are to calculate the two-dataset and multi-dataset IOIs as well as the outlier indices for a given set of constraints. Those constraints are summary statisitics given by the parameter means, uncertainties and correlation coefficients which can be obtained by, e.g., running GetDist to MCMC chains.
+#### IOI Matlab/Python codes. These codes are to calculate the two-dataset and multi-dataset IOIs as well as the outlier indices for a given set of constraints. Inputs are summary statisitics given by the parameter means, uncertainties and correlation coefficients which can be obtained by, e.g., running GetDist to MCMC chains. A Jupyter notebook is provided to calculate the Bayesian interpretation of the two-dataset IOI.
 
 #### For the Matlab Script:
 A matlab script to calculate two-dataset and multi-dataset and multi-dataset IOIs, as well as all "outlier indices" for an arbitary number of contraints and in an arbitary parameter space. Outputs are stored in e.g., IOI_CMB.txt  
@@ -20,7 +20,7 @@ e.g.: `python pyioi.py -r ./batch -o ./IOIouts/IOI.txt -p omegabh2 omegach2 thet
 
 
 #### For the Bayesian interpretation framework of the two-dataset IOI:
-Enter the obtained two-dataset IOI value and the number of parameters
+Enter the obtained two-dataset IOI value and the number of parameters.
 
 
 
