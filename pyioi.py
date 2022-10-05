@@ -1,12 +1,43 @@
 # Python 3.7
 # "python pyioi.py -h" for help
+# developer: Liqiang Hou, Weikang Lin
 
 import numpy as np
 import pandas as pd
 import os
 import argparse
+from scipy.interpolate import interp1d
 
 class IOI:
+
+
+# Below is to load the precalculated statistics for interpolation:
+    def create_summary_stat(self, IOI,N_dim):
+        b_summary = np.loadtxt('./Interpolate/b_summary_'+str(N_dim)+'.txt')
+        f_P_NotSignificant=interp1d(b_summary[:,0],b_summary[:,1])   # Probability for beta<1 as function of IOI
+        f_b_median=interp1d(b_summary[:,0],b_summary[:,2])           # Median of beta as function of IOI
+        f_b_low1=interp1d(b_summary[:,0],b_summary[:,3])             # 68%-percentile lower limit of beta
+        f_b_up1=interp1d(b_summary[:,0],b_summary[:,4])              # 68%-percentile upper limit of beta
+        f_b_low2=interp1d(b_summary[:,0],b_summary[:,5])             # 95%-percentile lower limit of beta
+        f_b_up2=interp1d(b_summary[:,0],b_summary[:,6])              # 95%-percentile upper limit of beta
+        return f_P_NotSignificant(np.sqrt(2*IOI)), f_b_median(np.sqrt(2*IOI)), f_b_low1(np.sqrt(2*IOI)), \
+                 f_b_up1(np.sqrt(2*IOI)), f_b_low2(np.sqrt(2*IOI)), f_b_up2(np.sqrt(2*IOI))
+
+# Below is to define the ranking scheme
+    def print_ranking(self, median, low1, up1):
+        zones = [4, 5]   # This is quite abitrary, specify another if find more adequate.
+        if median+up1<zones[0]:
+            print("Moderate inconsistency")
+        elif median+low1>zones[1]:
+            print("Very strong inconsistency")
+        elif median+low1<zones[0] and median+up1>zones[1]:
+            print("Strong inconsistency")
+        elif median+low1<zones[0] and median+up1>zones[0]:
+            print("Moderate-to-strong inconsistency")
+        elif median+low1>zones[0] and median+up1>zones[0]:
+            print("Strong-to-very strong inconsitency")
+        else:
+            print("Ranking Not Defined!")
 
     def readFile(self, fname):
         # Read File Data
@@ -147,6 +178,38 @@ class IOI:
             df = df.sort_values(["Outlier"], ascending=False)
         return df
 
+
+    def IOI_func(self,fn=None, out=None, params=None):
+        
+        if not fn or not params:
+            print("No input path or no parameters are specified.")
+            exit()
+
+        dat = self.folderRead(fn)
+        # Common parameter Check
+        param_ = [set(x['parameter']) for x, _ in dat.values()]
+        unique_params = set.union(*param_)
+        common_params = set.intersection(*param_)
+        print('%d parameters in total, %d common parameters, %d selected.' % (len(unique_params), len(common_params), len(params)))
+    
+        twoIOIs = self.calcTwoIOI(dat, params)
+        print(twoIOIs)
+        print()
+        print('\nMulti-IOI\t', self.calcMultiIOI(dat, params))
+        print('\n', self.calcRemainingIOI(dat, params))
+
+        if out:
+            if not os.path.exists(os.path.dirname(out)):
+                os.makedirs(os.path.dirname(out))
+
+            with open(out, 'w') as fp:
+                fp.write('%d parameters in total, %d common parameters, %d selected.' % (len(unique_params), len(common_params), len(params)))
+                fp.write('\n\n')
+                fp.write(self.calcTwoIOI(dat, params).to_string())
+                fp.write('\n')
+                fp.write('\nMulti-IOI\t' + str(self.calcMultiIOI(dat, params)))
+                fp.write('\n\n' + self.calcRemainingIOI(dat, params).to_string())
+        return twoIOIs
 
 
 if __name__ == "__main__":
